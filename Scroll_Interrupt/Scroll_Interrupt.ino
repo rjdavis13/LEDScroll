@@ -9,10 +9,13 @@
 #define LEDPIN 17
 #define BUTTONPIN 3
 
-// variables will change
+//*** variables will change
 volatile uint8_t mode = 0;
-
-// Parameter 1 = number of pixels in strip
+  // Debounce stuff (note! Debouncer will fail after 50 days continous operation)
+  unsigned long lastDBTime = 0;  // the last time the output pin was toggled
+  unsigned long debounceDelay = 50;    // the debounce time
+  
+  // Parameter 1 = number of pixels in strip
 // Parameter 2 = Arduino LED data pin number (most are valid)
 // Parameter 3 = pixel type flags, add together as needed:
 //   NEO_KHZ800  800 KHz bitstream (most NeoPixel products w/WS2812 LEDs)
@@ -39,7 +42,7 @@ void setup() {
   // initialize the pushbutton pin as an input:
   pinMode(BUTTONPIN, INPUT_PULLUP);
   // Attach an interrupt to the ISR vector
-  attachInterrupt(digitalPinToInterrupt(BUTTONPIN), pin_ISR, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(BUTTONPIN), pin_ISR, );
 
 
 //*** the led strip stuff  
@@ -51,15 +54,19 @@ void loop() {
   // Some example procedures showing how to display to the pixels:
   while (mode == 0){
     colorWipe(strip.Color(255, 255, 255), 50); // White
+	colorWipe(strip.Color(0, 0, 0), 50); // Clear
   }
   while (mode == 1){
     colorWipe(strip.Color(255, 0, 0), 50); // Red
+	colorWipe(strip.Color(0, 0, 0), 50); // Clear
   }
   while (mode == 2){
     colorWipe(strip.Color(0, 255, 0), 50); // Green
+	colorWipe(strip.Color(0, 0, 0), 50); // Clear
   }
   while (mode == 3){
     colorWipe(strip.Color(0, 0, 255), 50); // Blue
+	colorWipe(strip.Color(0, 0, 0), 50); // Clear
   }
   while (mode == 4){
     rainbowCycle(20);
@@ -78,15 +85,17 @@ void loop() {
 }
 
 
-//interrupt action
+//interrupt action for mode button
 void pin_ISR() {
-  mode = mode + 1;
-  if (mode>4){
-    mode = 0;
-  }
+  interruptTime = millis();
+  if( (interruptTime - lastDBTime) > debounceDelay){
+	lastDBTime = interruptTime;
+	mode = mode + 1;
+	  if (mode > 4){
+		mode = 0;
+	  }
+	}
 }
-
-
 
 
 // Fill the dots one after the other with a color
@@ -97,6 +106,7 @@ void colorWipe(uint32_t c, uint8_t wait) {
     delay(wait);
   }
 }
+
 
 void rainbow(uint8_t wait) {
   uint16_t i, j;
@@ -110,6 +120,7 @@ void rainbow(uint8_t wait) {
   }
 }
 
+
 // Slightly different, this makes the rainbow equally distributed throughout
 void rainbowCycle(uint8_t wait) {
   uint16_t i, j;
@@ -122,6 +133,7 @@ void rainbowCycle(uint8_t wait) {
     delay(wait);
   }
 }
+
 
 //Theatre-style crawling lights.
 void theaterChase(uint32_t c, uint8_t wait) {
@@ -141,6 +153,7 @@ void theaterChase(uint32_t c, uint8_t wait) {
   }
 }
 
+
 //Theatre-style crawling lights with rainbow effect
 void theaterChaseRainbow(uint8_t wait) {
   for (int j=0; j < 256; j++) {     // cycle all 256 colors in the wheel
@@ -158,6 +171,7 @@ void theaterChaseRainbow(uint8_t wait) {
     }
   }
 }
+
 
 // Input a value 0 to 255 to get a color value.
 // The colours are a transition r - g - b - back to r.
