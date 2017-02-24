@@ -71,18 +71,21 @@ void loop() {
   while (mode == 4){
     rainbowCycle(20);
   }
+  while(mode == 5){
+	triColorWipe(strip.color(255,0,0), strip.color(255,255,255), strip.color(0,0,255), 50); // you patriot you
+  }
   
 
-//colorWipe(strip.Color(0, 0, 0, 255), 50); // White RGBW
+/*colorWipe(strip.Color(0, 0, 0, 255), 50); // White RGBW
   // Send a theater pixel chase in...
-//  theaterChase(strip.Color(127, 127, 127), 50); // White
-//  theaterChase(strip.Color(127, 0, 0), 50); // Red
-//  theaterChase(strip.Color(0, 0, 127), 50); // Blue
+  theaterChase(strip.Color(127, 127, 127), 50); // White
+  theaterChase(strip.Color(127, 0, 0), 50); // Red
+  theaterChase(strip.Color(0, 0, 127), 50); // Blue
 
-//  rainbow(20);
-//  rainbowCycle(20);
-//  theaterChaseRainbow(50);
-}
+  rainbow(20);
+  rainbowCycle(20);
+  theaterChaseRainbow(50);
+}*/
 
 
 //interrupt action for mode button
@@ -91,12 +94,23 @@ void pin_ISR() {
   if( (interruptTime - lastDBTime) > debounceDelay){
 	lastDBTime = interruptTime;
 	mode = mode + 1;
-	  if (mode > 4){
+	  if (mode > 5){
 		mode = 0;
 	  }
 	}
 }
 
+
+// Fill the dots one after the other with a color
+void triColorWipe(uint32_t c1, uint32_t c2, uint32_t c3, uint8_t wait) {
+  for(uint16_t i=0; i+2<strip.numPixels(); i=i+3S) {
+    strip.setPixelColor(i, c1);
+    strip.setPixelColor(i+1, c2);
+	strip.setPixelColor(i+2, c3);
+	strip.show();
+    delay(wait);
+  }
+}
 
 // Fill the dots one after the other with a color
 void colorWipe(uint32_t c, uint8_t wait) {
