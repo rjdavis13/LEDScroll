@@ -13,7 +13,9 @@
 volatile uint8_t mode = 0;
   // Debounce stuff (note! Debouncer will fail after 50 days continous operation)
   unsigned long lastDBTime = 0;  // the last time the output pin was toggled
-  unsigned long debounceDelay = 50;    // the debounce time
+  unsigned long debounceDelay = 75;    // the debounce time
+  unsigned long interruptTime = 0;  //time interrupt occures
+
   
   // Parameter 1 = number of pixels in strip
 // Parameter 2 = Arduino LED data pin number (most are valid)
@@ -42,7 +44,7 @@ void setup() {
   // initialize the pushbutton pin as an input:
   pinMode(BUTTONPIN, INPUT_PULLUP);
   // Attach an interrupt to the ISR vector
-  attachInterrupt(digitalPinToInterrupt(BUTTONPIN), pin_ISR, );
+  attachInterrupt(digitalPinToInterrupt(BUTTONPIN), pin_ISR, FALLING);
 
 
 //*** the led strip stuff  
@@ -72,7 +74,8 @@ void loop() {
     rainbowCycle(20);
   }
   while(mode == 5){
-	triColorWipe(strip.color(255,0,0), strip.color(255,255,255), strip.color(0,0,255), 50); // you patriot you
+	triColorWipe(strip.Color(255,0,0), strip.Color(255,255,255), strip.Color(0,0,255), 50); // you patriot you
+  colorWipe(strip.Color(0, 0, 0), 16); // Clear
   }
   
 
@@ -84,8 +87,8 @@ void loop() {
 
   rainbow(20);
   rainbowCycle(20);
-  theaterChaseRainbow(50);
-}*/
+  theaterChaseRainbow(50);*/
+}
 
 
 //interrupt action for mode button
@@ -103,7 +106,7 @@ void pin_ISR() {
 
 // Fill the dots one after the other with a color
 void triColorWipe(uint32_t c1, uint32_t c2, uint32_t c3, uint8_t wait) {
-  for(uint16_t i=0; i+2<strip.numPixels(); i=i+3S) {
+  for(uint16_t i=0; i+2<strip.numPixels(); i=i+3) {
     strip.setPixelColor(i, c1);
     strip.setPixelColor(i+1, c2);
 	strip.setPixelColor(i+2, c3);
