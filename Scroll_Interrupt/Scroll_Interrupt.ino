@@ -7,17 +7,22 @@
 #endif
 
 #define LEDPIN 17
-#define BUTTONPIN 3
+#define MODEPIN 3
+#define COLORPIN 6
 
 //*** variables will change
-volatile uint8_t mode = 0;
+  uint8_t mode = 0;
+
+  uint8_t c1seed[] = {255,0,0};
+  uint8_t c1count[] = 0;
+
   // Debounce stuff (note! Debouncer will fail after 50 days continous operation)
   unsigned long lastDBTime = 0;  // the last time the output pin was toggled
-  unsigned long debounceDelay = 75;    // the debounce time
+  unsigned long debounceDelay = 50;    // the debounce time
   unsigned long interruptTime = 0;  //time interrupt occures
 
   
-  // Parameter 1 = number of pixels in strip
+// Parameter 1 = number of pixels in strip
 // Parameter 2 = Arduino LED data pin number (most are valid)
 // Parameter 3 = pixel type flags, add together as needed:
 //   NEO_KHZ800  800 KHz bitstream (most NeoPixel products w/WS2812 LEDs)
@@ -25,7 +30,7 @@ volatile uint8_t mode = 0;
 //   NEO_GRB     Pixels are wired for GRB bitstream (most NeoPixel products)
 //   NEO_RGB     Pixels are wired for RGB bitstream (v1 FLORA pixels, not v2)
 //   NEO_RGBW    Pixels are wired for RGBW bitstream (NeoPixel RGBW products)
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(99, LEDPIN, NEO_GRB + NEO_KHZ800);
+  Adafruit_NeoPixel strip = Adafruit_NeoPixel(99, LEDPIN, NEO_GRB + NEO_KHZ800);
 
 // IMPORTANT: To reduce NeoPixel burnout risk, add 1000 uF capacitor across
 // pixel power leads, add 300 - 500 Ohm resistor on first pixel's data input
@@ -40,12 +45,17 @@ void setup() {
   // End of trinket special code 
 
 
-//*** the button stuff
-  // initialize the pushbutton pin as an input:
-  pinMode(BUTTONPIN, INPUT_PULLUP);
+//*** the mode button stuff
+  // initialize the mode button pin as an input:
+  pinMode(MODEPIN, INPUT_PULLUP);
   // Attach an interrupt to the ISR vector
-  attachInterrupt(digitalPinToInterrupt(BUTTONPIN), pin_ISR, FALLING);
+  attachInterrupt(digitalPinToInterrupt(MODEPIN), Mode_ISR, CHANGE);
 
+  // initialize the color button pin as an input:
+  pinMode(COLORPIN, INPUT_PULLUP);
+  // Attach an interrupt to the ISR vector
+  attachInterrupt(digitalPinToInterrupt(COLORPIN), Color_ISR, CHANGE);
+  
 
 //*** the led strip stuff  
   strip.begin();
@@ -92,7 +102,7 @@ void loop() {
 
 
 //interrupt action for mode button
-void pin_ISR() {
+void Mode_ISR() {
   interruptTime = millis();
   if( (interruptTime - lastDBTime) > debounceDelay){
 	lastDBTime = interruptTime;
@@ -103,6 +113,45 @@ void pin_ISR() {
 	}
 }
 
+//interrupt action for color button
+void Color_ISR() {
+  interruptTime = millis();
+  if( (interruptTime - lastDBTime) > debounceDelay){
+	if(c1seed[0] == 0){
+	  c1seed[0] = 128;
+	}
+	else if(c1seed[0] == 128){
+	  c1seed[0]=255;
+	}
+    else if(c1seed[0] == 255){
+	  c1seed[0] = 0;
+	  if(c1seed[1] == 0){
+		c1seed[1] = 255;
+	  }
+	  else if(c1seed[1] == 255){
+		c1seed[1] = 128;
+	  }
+	  else if(c1seed[1] == 128){
+		c1seed[1] = 0;
+		if(c1seed[2] == 0){
+		  c1seed[2] = 255;
+		}
+		else if(c1seed[2] == 255){
+		c1seed[2] = 128;
+	    }
+	    else if(c1seed[2] == 128){
+		  c1seed[2] = 0;
+	    }
+	  }
+	}
+	if ((c1seed[0] + c1seed[1] + c1seed[2]) <= 128){
+	  c1seed[0] = 128;
+	}
+	if ((c1seed[0] + c1seed[1] + c1seed[2]) < 255){
+	  c1seed[0] = 255;
+	}
+  }
+}
 
 // Fill the dots one after the other with a color
 void triColorWipe(uint32_t c1, uint32_t c2, uint32_t c3, uint8_t wait) {
