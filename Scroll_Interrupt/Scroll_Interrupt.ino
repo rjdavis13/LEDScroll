@@ -8,17 +8,17 @@
 
 #define LEDPIN 17
 #define MODEPIN 3
-#define COLORPIN 6
+#define COLORPIN 10
 
 //*** variables will change
   uint8_t mode = 0;
 
   uint8_t c1seed[] = {255,0,0};
-  uint8_t c1count[] = 0;
+  uint8_t c1count = 0;
 
   // Debounce stuff (note! Debouncer will fail after 50 days continous operation)
   unsigned long lastDBTime = 0;  // the last time the output pin was toggled
-  unsigned long debounceDelay = 50;    // the debounce time
+  unsigned long debounceDelay = 75;    // the debounce time
   unsigned long interruptTime = 0;  //time interrupt occures
 
   
@@ -49,12 +49,12 @@ void setup() {
   // initialize the mode button pin as an input:
   pinMode(MODEPIN, INPUT_PULLUP);
   // Attach an interrupt to the ISR vector
-  attachInterrupt(digitalPinToInterrupt(MODEPIN), Mode_ISR, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(MODEPIN), Mode_ISR, FALLING);
 
   // initialize the color button pin as an input:
   pinMode(COLORPIN, INPUT_PULLUP);
   // Attach an interrupt to the ISR vector
-  attachInterrupt(digitalPinToInterrupt(COLORPIN), Color_ISR, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(COLORPIN), Color_ISR, FALLING);
   
 
 //*** the led strip stuff  
@@ -65,20 +65,20 @@ void setup() {
 void loop() {
   // Some example procedures showing how to display to the pixels:
   while (mode == 0){
-    colorWipe(strip.Color(255, 255, 255), 50); // White
+    colorWipe(strip.Color(255, 255, 255), 25); // White
 	colorWipe(strip.Color(0, 0, 0), 50); // Clear
   }
   while (mode == 1){
-    colorWipe(strip.Color(255, 0, 0), 50); // Red
-	colorWipe(strip.Color(0, 0, 0), 50); // Clear
+    colorWipe(strip.Color(c1seed[0], c1seed[1], c1seed[2]), 25); // Red
+	colorWipe(strip.Color(0, 0, 0), 25); // Clear
   }
   while (mode == 2){
-    colorWipe(strip.Color(0, 255, 0), 50); // Green
-	colorWipe(strip.Color(0, 0, 0), 50); // Clear
+    colorWipe(strip.Color(0, 255, 0), 25); // Green
+	colorWipe(strip.Color(0, 0, 0), 25); // Clear
   }
   while (mode == 3){
-    colorWipe(strip.Color(0, 0, 255), 50); // Blue
-	colorWipe(strip.Color(0, 0, 0), 50); // Clear
+    colorWipe(strip.Color(0, 0, 255), 25); // Blue
+	colorWipe(strip.Color(0, 0, 0), 25); // Clear
   }
   while (mode == 4){
     rainbowCycle(20);
