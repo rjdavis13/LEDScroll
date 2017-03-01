@@ -10,11 +10,49 @@
 #define MODEPIN 3
 #define COLORPIN 10
 
+//*** color constants
+const uint32_t bastardAmber = strip.Color(255,206,143);
+const uint32_t mediumAmber = strip.Color(254,177,153);
+const uint32_t paleAmberGold = strip.Color(254,192,138);
+const uint32_t galloGold = strip.Color(254,165,98);
+const uint32_t goldenAbmer = strip.Color(587,121,0);
+const uint32_t lightRed = strip.Color(176,17,0);
+const uint32_t mediumPink = strip.Color(234,139,171);
+const uint32_t broadwayPink = strip.Color(224,5,97);
+const uint32_t folliesPink = strip.Color(175,77,173);
+const uint32_t lightLavender = strip.Color(119,130,199);
+const uint32_t specialLavender = strip.Color(147,164,212);
+const uint32_t lavender = strip.Color(88,2,163);
+const uint32_t indigo = strip.Color(0,38,86);
+const uint32_t hemsleyBlue = strip.Color(0,142,208);
+const uint32_t tiptonBlue = strip.Color(52,148,209);
+const uint32_t lightSteelBlue = strip.Color(1,134,201);
+const uint32_t lightSkyBlue = strip.Color(0,145,212);
+const uint32_t skyBlue = strip.Color(0,121,192);
+const uint32_t brilliantBlue = strip.Color(0,129,184);
+const uint32_t lightGreenBlue = strip.Color(0,83,115);
+const uint32_t brightBlue = strip.Color(0,97,166);
+const uint32_t primaryBlue = strip.Color(1,100,167);
+const uint32_t congoBlue = strip.Color(0,40,86);
+const uint32_t paleYellowGreen = strip.Color(209,219,182);
+const uint32_t mossGreen = strip.Color(42,165,85);
+const uint32_t primaryGreen = strip.Color(0,46,35);
+const uint32_t doubleCTB = strip.Color(8,107,222);
+const uint32_t fullCTB = strip.Color(107,158,231);
+const uint32_t halfCTB = strip.Color(165,198,247);
+const uint32_t darkBlue = strip.Color(0,0,189);
+const uint32_t white = strip.Color(255,255,255);
+
+
 //*** variables will change
   uint8_t mode = 0;
+  
+  uint8_t color = 0;
 
-  uint8_t c1seed[] = {255,0,0};
+ 
+  /*  int c1seed[] = {255,0,0};
   uint8_t c1count = 0;
+*/
 
   // Debounce stuff (note! Debouncer will fail after 50 days continous operation)
   unsigned long lastDBTime = 0;  // the last time the output pin was toggled
@@ -114,10 +152,17 @@ void Mode_ISR() {
 }
 
 //interrupt action for color button
+// ! This is probably excessive, just list colors you like and put into an array
+//   then cycle through them in this ISR
 void Color_ISR() {
   interruptTime = millis();
   if( (interruptTime - lastDBTime) > debounceDelay){
-	if(c1seed[0] == 0){
+	lastDBTime = interruptTime;
+	color++;
+	  if (color > 5){
+		mode = 0;
+	
+	/*if(c1seed[0] == 0){
 	  c1seed[0] = 128;
 	}
 	else if(c1seed[0] == 128){
@@ -149,7 +194,7 @@ void Color_ISR() {
 	}
 	if ((c1seed[0] + c1seed[1] + c1seed[2]) < 255){
 	  c1seed[0] = 255;
-	}
+	}*/
   }
 }
 
