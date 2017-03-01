@@ -17,6 +17,7 @@ const uint32_t mediumAmber = strip.Color(254,177,153);
 const uint32_t paleAmberGold = strip.Color(254,192,138);
 const uint32_t galloGold = strip.Color(254,165,98);
 const uint32_t goldenAbmer = strip.Color(254,121,0);
+const uint32_t fullRed = strip.Color(255,0,0);
 const uint32_t lightRed = strip.Color(176,17,0);
 const uint32_t mediumPink = strip.Color(234,139,171);
 const uint32_t broadwayPink = strip.Color(224,5,97);
@@ -37,19 +38,22 @@ const uint32_t primaryBlue = strip.Color(1,100,167);
 const uint32_t congoBlue = strip.Color(0,40,86);
 const uint32_t paleYellowGreen = strip.Color(209,219,182);
 const uint32_t mossGreen = strip.Color(42,165,85);
+const uint32_t fullGreen = strip.Color(0,255,0);
 const uint32_t primaryGreen = strip.Color(0,46,35);
 const uint32_t doubleCTB = strip.Color(8,107,222);
 const uint32_t fullCTB = strip.Color(107,158,231);
 const uint32_t halfCTB = strip.Color(165,198,247);
 const uint32_t darkBlue = strip.Color(0,0,189);
+const uint32_t fullBlue = strip.Color(0,0,255);
 const uint32_t white = strip.Color(255,255,255);
 */
-const uint32_t colorArray[30] = {
+const uint32_t colorArray[33] = {
 strip.Color(255,206,143),
 strip.Color(254,177,153),
 strip.Color(254,192,138),
 strip.Color(254,165,98),
 strip.Color(254,121,0),
+strip.Color(255,0,0),
 strip.Color(176,17,0),
 strip.Color(234,139,171),
 strip.Color(224,5,97),
@@ -70,11 +74,13 @@ strip.Color(1,100,167),
 strip.Color(0,40,86),
 strip.Color(209,219,182),
 strip.Color(42,165,85),
+strip.Color(0,255,0),
 strip.Color(0,46,35),
 strip.Color(8,107,222),
 strip.Color(107,158,231),
 strip.Color(165,198,247),
 strip.Color(0,0,189),
+strip.Color(0,0,255),
 strip.Color(255,255,255)};
 //*** variables will change
   uint8_t modeIndex = 0;
@@ -85,7 +91,7 @@ strip.Color(255,255,255)};
  
   /*  int c1seed[] = {255,0,0};
   uint8_t c1count = 0;
-*/
+  */
 
   // Debounce stuff (note! Debouncer will fail after 50 days continous operation)
   unsigned long lastDBTime = 0;  // the last time the output pin was toggled
@@ -192,7 +198,7 @@ void Color_ISR() {
   if( (interruptTime - lastDBTime) > debounceDelay){
 	lastDBTime = interruptTime;
 	colorIndex++;
-	  if (colorIndex > 30){
+	  if (colorIndex > 33){
 		colorIndex = 0;
 	color1Select = colorArray[colorIndex];
 	/*if(c1seed[0] == 0){
