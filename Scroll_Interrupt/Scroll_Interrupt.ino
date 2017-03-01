@@ -11,6 +11,7 @@
 #define COLORPIN 10
 
 //*** color constants
+/*
 const uint32_t bastardAmber = strip.Color(255,206,143);
 const uint32_t mediumAmber = strip.Color(254,177,153);
 const uint32_t paleAmberGold = strip.Color(254,192,138);
@@ -42,12 +43,44 @@ const uint32_t fullCTB = strip.Color(107,158,231);
 const uint32_t halfCTB = strip.Color(165,198,247);
 const uint32_t darkBlue = strip.Color(0,0,189);
 const uint32_t white = strip.Color(255,255,255);
-
-
+*/
+const uint32_t colorArray[30] = {
+strip.Color(255,206,143),
+strip.Color(254,177,153),
+strip.Color(254,192,138),
+strip.Color(254,165,98),
+strip.Color(587,121,0),
+strip.Color(176,17,0),
+strip.Color(234,139,171),
+strip.Color(224,5,97),
+strip.Color(175,77,173),
+strip.Color(119,130,199),
+strip.Color(147,164,212),
+strip.Color(88,2,163),
+strip.Color(0,38,86),
+strip.Color(0,142,208),
+strip.Color(52,148,209),
+strip.Color(1,134,201),
+strip.Color(0,145,212),
+strip.Color(0,121,192),
+strip.Color(0,129,184),
+strip.Color(0,83,115),
+strip.Color(0,97,166),
+strip.Color(1,100,167),
+strip.Color(0,40,86),
+strip.Color(209,219,182),
+strip.Color(42,165,85),
+strip.Color(0,46,35),
+strip.Color(8,107,222),
+strip.Color(107,158,231),
+strip.Color(165,198,247),
+strip.Color(0,0,189),
+strip.Color(255,255,255)};
 //*** variables will change
-  uint8_t mode = 0;
+  uint8_t modeIndex = 0;
   
-  uint8_t color = 0;
+  uint8_t colorIndex = 0;
+  uint32_t color1Select = colorArray[0];
 
  
   /*  int c1seed[] = {255,0,0};
@@ -102,26 +135,26 @@ void setup() {
 
 void loop() {
   // Some example procedures showing how to display to the pixels:
-  while (mode == 0){
-    colorWipe(strip.Color(255, 255, 255), 25); // White
+  while (modeIndex == 0){
+    colorWipe(color1Select, 25); // color1Select
 	colorWipe(strip.Color(0, 0, 0), 50); // Clear
   }
-  while (mode == 1){
-    colorWipe(strip.Color(c1seed[0], c1seed[1], c1seed[2]), 25); // Red
+  while (modeIndex == 1){
+    colorWipe(strip.Color(255,255,255), 25); // Red
 	colorWipe(strip.Color(0, 0, 0), 25); // Clear
   }
-  while (mode == 2){
+  while (modeIndex == 2){
     colorWipe(strip.Color(0, 255, 0), 25); // Green
 	colorWipe(strip.Color(0, 0, 0), 25); // Clear
   }
-  while (mode == 3){
+  while (modeIndex == 3){
     colorWipe(strip.Color(0, 0, 255), 25); // Blue
 	colorWipe(strip.Color(0, 0, 0), 25); // Clear
   }
-  while (mode == 4){
+  while (modeIndex == 4){
     rainbowCycle(20);
   }
-  while(mode == 5){
+  while(modeIndex == 5){
 	triColorWipe(strip.Color(255,0,0), strip.Color(255,255,255), strip.Color(0,0,255), 50); // you patriot you
   colorWipe(strip.Color(0, 0, 0), 16); // Clear
   }
@@ -144,9 +177,9 @@ void Mode_ISR() {
   interruptTime = millis();
   if( (interruptTime - lastDBTime) > debounceDelay){
 	lastDBTime = interruptTime;
-	mode = mode + 1;
-	  if (mode > 5){
-		mode = 0;
+	modeIndex++;
+	  if (modeIndex > 5){
+		modeIndex = 0;
 	  }
 	}
 }
@@ -158,10 +191,10 @@ void Color_ISR() {
   interruptTime = millis();
   if( (interruptTime - lastDBTime) > debounceDelay){
 	lastDBTime = interruptTime;
-	color++;
-	  if (color > 5){
-		mode = 0;
-	
+	colorIndex++;
+	  if (colorIndex > 30){
+		colorIndex = 0;
+	color1Select = colorArray[colorIndex];
 	/*if(c1seed[0] == 0){
 	  c1seed[0] = 128;
 	}
