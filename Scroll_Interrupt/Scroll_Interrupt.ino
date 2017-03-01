@@ -16,7 +16,7 @@ const uint32_t bastardAmber = strip.Color(255,206,143);
 const uint32_t mediumAmber = strip.Color(254,177,153);
 const uint32_t paleAmberGold = strip.Color(254,192,138);
 const uint32_t galloGold = strip.Color(254,165,98);
-const uint32_t goldenAbmer = strip.Color(587,121,0);
+const uint32_t goldenAbmer = strip.Color(254,121,0);
 const uint32_t lightRed = strip.Color(176,17,0);
 const uint32_t mediumPink = strip.Color(234,139,171);
 const uint32_t broadwayPink = strip.Color(224,5,97);
@@ -49,7 +49,7 @@ strip.Color(255,206,143),
 strip.Color(254,177,153),
 strip.Color(254,192,138),
 strip.Color(254,165,98),
-strip.Color(587,121,0),
+strip.Color(254,121,0),
 strip.Color(176,17,0),
 strip.Color(234,139,171),
 strip.Color(224,5,97),
