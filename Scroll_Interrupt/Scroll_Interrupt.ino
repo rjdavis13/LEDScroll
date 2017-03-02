@@ -1,16 +1,22 @@
+//*** Includes
 #include <Adafruit_NeoPixel.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <Arduino.h>
 
 #ifdef __AVR__
   #include <avr/power.h>
 #endif
 
+//*** Configuration Stuff
 #define LEDPIN 17
 #define MODEPIN 3
 #define COLORPIN 10
 
-//*** color constants
+#define NUM_LEDS 99
+
+
+//*** Color constants
 
 const uint32_t colorArray[] = {
 strip.Color(255,0,0),		//red
@@ -126,7 +132,7 @@ strip.Color(255,255,255)};	//white
 //   NEO_GRB     Pixels are wired for GRB bitstream (most NeoPixel products)
 //   NEO_RGB     Pixels are wired for RGB bitstream (v1 FLORA pixels, not v2)
 //   NEO_RGBW    Pixels are wired for RGBW bitstream (NeoPixel RGBW products)
-  Adafruit_NeoPixel strip = Adafruit_NeoPixel(99, LEDPIN, NEO_GRB + NEO_KHZ800);
+  Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, LEDPIN, NEO_GRB + NEO_KHZ800);
 
 // IMPORTANT: To reduce NeoPixel burnout risk, add 1000 uF capacitor across
 // pixel power leads, add 300 - 500 Ohm resistor on first pixel's data input
@@ -134,11 +140,13 @@ strip.Color(255,255,255)};	//white
 // on a live circuit...if you must, connect GND first.
 
 void setup() {
-  //* This is for Trinket 5V 16MHz, you can remove these three lines if you are not using a Trinket
-//  #if defined (__AVR_ATtiny85__)
-//    if (F_CPU == 16000000) clock_prescale_set(clock_div_1);
-//  #endif
-  // End of trinket special code 
+  /*
+  // This is for Trinket 5V 16MHz, you can remove these three lines if you are not using a Trinket
+  #if defined (__AVR_ATtiny85__)
+    if (F_CPU == 16000000) clock_prescale_set(clock_div_1);
+  #endif
+  // End of trinket special code
+  */
 
 
 //*** the mode button stuff
@@ -185,15 +193,7 @@ void loop() {
   }
   
 
-/*colorWipe(strip.Color(0, 0, 0, 255), 50); // White RGBW
-  // Send a theater pixel chase in...
-  theaterChase(strip.Color(127, 127, 127), 50); // White
-  theaterChase(strip.Color(127, 0, 0), 50); // Red
-  theaterChase(strip.Color(0, 0, 127), 50); // Blue
 
-  rainbow(20);
-  rainbowCycle(20);
-  theaterChaseRainbow(50);*/
 }
 
 
@@ -210,8 +210,6 @@ void Mode_ISR() {
 }
 
 //interrupt action for color button
-// ! This is probably excessive, just list colors you like and put into an array
-//   then cycle through them in this ISR
 void Color_ISR() {
   interruptTime = millis();
   if( (interruptTime - lastDBTime) > debounceDelay){
