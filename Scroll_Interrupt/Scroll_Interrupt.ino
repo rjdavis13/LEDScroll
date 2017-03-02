@@ -110,10 +110,7 @@ strip.Color(255,255,255)};	//white
   uint8_t colorIndex = 0;
   uint32_t color1Select = colorArray[0];
 
- 
-  /*  int c1seed[] = {255,0,0};
-  uint8_t c1count = 0;
-  */
+
 
   // Debounce stuff (note! Debouncer will fail after 50 days continous operation)
   unsigned long lastDBTime = 0;  // the last time the output pin was toggled
@@ -220,43 +217,10 @@ void Color_ISR() {
   if( (interruptTime - lastDBTime) > debounceDelay){
 	lastDBTime = interruptTime;
 	colorIndex++;
-	  if (colorIndex >= numColors)){
-		colorIndex = 0;
+	if (colorIndex >= numColors)){
+	  colorIndex = 0;
+	}
 	color1Select = colorArray[colorIndex];
-	
-	/*if(c1seed[0] == 0){
-	  c1seed[0] = 128;
-	}
-	else if(c1seed[0] == 128){
-	  c1seed[0]=255;
-	}
-    else if(c1seed[0] == 255){
-	  c1seed[0] = 0;
-	  if(c1seed[1] == 0){
-		c1seed[1] = 255;
-	  }
-	  else if(c1seed[1] == 255){
-		c1seed[1] = 128;
-	  }
-	  else if(c1seed[1] == 128){
-		c1seed[1] = 0;
-		if(c1seed[2] == 0){
-		  c1seed[2] = 255;
-		}
-		else if(c1seed[2] == 255){
-		c1seed[2] = 128;
-	    }
-	    else if(c1seed[2] == 128){
-		  c1seed[2] = 0;
-	    }
-	  }
-	}
-	if ((c1seed[0] + c1seed[1] + c1seed[2]) <= 128){
-	  c1seed[0] = 128;
-	}
-	if ((c1seed[0] + c1seed[1] + c1seed[2]) < 255){
-	  c1seed[0] = 255;
-	}*/
   }
 }
 
