@@ -11,6 +11,26 @@
 #define COLORPIN 10
 
 //*** color constants
+
+const uint32_t colorArray[] = {
+strip.Color(255,0,0),		//red
+strip.Color(0,255,0),		//green
+strip.Color(0,0,255),		//blue
+strip.Color(255,255,0),		//yellow
+strip.Color(255,0,255),		//magenta
+strip.Color(0,255,255),		//teal
+strip.Color(255,121,0),		//goldenAmber
+strip.Color(176,17,0),		//lightRed
+strip.Color(88,2,163),		//lavender
+strip.Color(0,142,208),		//hemsleyBlue		
+strip.Color(42,165,85),		//mossGreen
+strip.Color(255,255,255)	//white
+}
+
+uint8_t numColors = length(colorArray);
+
+// OK these were great but most turned out too blown out/white
+// will select the best ones and add to shorter array
 /*
 const uint32_t bastardAmber = strip.Color(255,206,143);
 const uint32_t mediumAmber = strip.Color(254,177,153);
@@ -46,42 +66,44 @@ const uint32_t halfCTB = strip.Color(165,198,247);
 const uint32_t darkBlue = strip.Color(0,0,189);
 const uint32_t fullBlue = strip.Color(0,0,255);
 const uint32_t white = strip.Color(255,255,255);
-*/
+
 const uint32_t colorArray[33] = {
-strip.Color(255,206,143),
-strip.Color(254,177,153),
-strip.Color(254,192,138),
-strip.Color(254,165,98),
-strip.Color(254,121,0),
-strip.Color(255,0,0),
-strip.Color(176,17,0),
-strip.Color(234,139,171),
-strip.Color(224,5,97),
-strip.Color(175,77,173),
-strip.Color(119,130,199),
-strip.Color(147,164,212),
-strip.Color(88,2,163),
-strip.Color(0,38,86),
-strip.Color(0,142,208),
-strip.Color(52,148,209),
-strip.Color(1,134,201),
-strip.Color(0,145,212),
-strip.Color(0,121,192),
-strip.Color(0,129,184),
-strip.Color(0,83,115),
-strip.Color(0,97,166),
-strip.Color(1,100,167),
-strip.Color(0,40,86),
-strip.Color(209,219,182),
-strip.Color(42,165,85),
-strip.Color(0,255,0),
-strip.Color(0,46,35),
-strip.Color(8,107,222),
-strip.Color(107,158,231),
-strip.Color(165,198,247),
-strip.Color(0,0,189),
-strip.Color(0,0,255),
-strip.Color(255,255,255)};
+strip.Color(255,206,143),	//bastardAmber
+strip.Color(254,177,153),	//mediumAmber
+strip.Color(254,192,138),	//paleAmberGold
+strip.Color(254,165,98),	//galloGold
+strip.Color(254,121,0),		//goldenAbmer
+strip.Color(255,0,0),		//fullRed
+strip.Color(176,17,0),		//lightRed
+strip.Color(234,139,171),	//mediumPink
+strip.Color(224,5,97),		//broadwayPink
+strip.Color(175,77,173),	//folliesPink
+strip.Color(119,130,199),	//lightLavender
+strip.Color(147,164,212),	//specialLavender
+strip.Color(88,2,163),		//lavender
+strip.Color(0,38,86),		//indigo
+strip.Color(0,142,208),		//hemsleyBlue
+strip.Color(52,148,209),	//tiptonBlue
+strip.Color(1,134,201),		//lightSteelBlue
+strip.Color(0,145,212),		//lightSkyBlue
+strip.Color(0,121,192),		//skyBlue
+strip.Color(0,129,184),		//brilliantBlue
+strip.Color(0,83,115),		//lightGreenBlue
+strip.Color(0,97,166),		//brightBlue
+strip.Color(1,100,167),		//primaryBlue
+strip.Color(0,40,86),		//congoBlue
+strip.Color(209,219,182),	//paleYellowGreen
+strip.Color(42,165,85),		//mossGreen
+strip.Color(0,255,0),		//fullGreen
+strip.Color(0,46,35),		//primaryGreen
+strip.Color(8,107,222),		//doubleCTB
+strip.Color(107,158,231),	//fullCTB
+strip.Color(165,198,247),	//halfCTB
+strip.Color(0,0,189),		//darkBlue
+strip.Color(0,0,255),		//fullBlue
+strip.Color(255,255,255)};	//white
+*/
+
 //*** variables will change
   uint8_t modeIndex = 0;
   
@@ -198,9 +220,10 @@ void Color_ISR() {
   if( (interruptTime - lastDBTime) > debounceDelay){
 	lastDBTime = interruptTime;
 	colorIndex++;
-	  if (colorIndex > 33){
+	  if (colorIndex >= numColors)){
 		colorIndex = 0;
 	color1Select = colorArray[colorIndex];
+	
 	/*if(c1seed[0] == 0){
 	  c1seed[0] = 128;
 	}
