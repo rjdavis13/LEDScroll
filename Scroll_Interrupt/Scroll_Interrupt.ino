@@ -10,6 +10,23 @@
 #define MODEPIN 3
 #define COLORPIN 10
 
+
+// Parameter 1 = number of pixels in strip
+// Parameter 2 = Arduino LED data pin number (most are valid)
+// Parameter 3 = pixel type flags, add together as needed:
+//   NEO_KHZ800  800 KHz bitstream (most NeoPixel products w/WS2812 LEDs)
+//   NEO_KHZ400  400 KHz (classic 'v1' (not v2) FLORA pixels, WS2811 drivers)
+//   NEO_GRB     Pixels are wired for GRB bitstream (most NeoPixel products)
+//   NEO_RGB     Pixels are wired for RGB bitstream (v1 FLORA pixels, not v2)
+//   NEO_RGBW    Pixels are wired for RGBW bitstream (NeoPixel RGBW products)
+  Adafruit_NeoPixel strip = Adafruit_NeoPixel(99, LEDPIN, NEO_GRB + NEO_KHZ800);
+
+// IMPORTANT: To reduce NeoPixel burnout risk, add 1000 uF capacitor across
+// pixel power leads, add 300 - 500 Ohm resistor on first pixel's data input
+// and minimize distance between Arduino and first pixel.  Avoid connecting
+// on a live circuit...if you must, connect GND first.
+
+
 //*** color constants
 
 const uint32_t colorArray[] = {
@@ -23,11 +40,11 @@ strip.Color(255,121,0),		//goldenAmber
 strip.Color(176,17,0),		//lightRed
 strip.Color(88,2,163),		//lavender
 strip.Color(0,142,208),		//hemsleyBlue		
-strip.Color(42,165,85),		//mossGreen
+strip.Color(42,165,85),		//mossGreen xx
 strip.Color(255,255,255)	//white
-}
+};
 
-uint8_t numColors = length(colorArray);
+uint8_t numColors = ((sizeof(colorArray))/4);
 
 // OK these were great but most turned out too blown out/white
 // will select the best ones and add to shorter array
@@ -114,24 +131,11 @@ strip.Color(255,255,255)};	//white
 
   // Debounce stuff (note! Debouncer will fail after 50 days continous operation)
   unsigned long lastDBTime = 0;  // the last time the output pin was toggled
-  unsigned long debounceDelay = 75;    // the debounce time
+  unsigned long debounceDelay = 1000;    // the debounce time
   unsigned long interruptTime = 0;  //time interrupt occures
 
   
-// Parameter 1 = number of pixels in strip
-// Parameter 2 = Arduino LED data pin number (most are valid)
-// Parameter 3 = pixel type flags, add together as needed:
-//   NEO_KHZ800  800 KHz bitstream (most NeoPixel products w/WS2812 LEDs)
-//   NEO_KHZ400  400 KHz (classic 'v1' (not v2) FLORA pixels, WS2811 drivers)
-//   NEO_GRB     Pixels are wired for GRB bitstream (most NeoPixel products)
-//   NEO_RGB     Pixels are wired for RGB bitstream (v1 FLORA pixels, not v2)
-//   NEO_RGBW    Pixels are wired for RGBW bitstream (NeoPixel RGBW products)
-  Adafruit_NeoPixel strip = Adafruit_NeoPixel(99, LEDPIN, NEO_GRB + NEO_KHZ800);
 
-// IMPORTANT: To reduce NeoPixel burnout risk, add 1000 uF capacitor across
-// pixel power leads, add 300 - 500 Ohm resistor on first pixel's data input
-// and minimize distance between Arduino and first pixel.  Avoid connecting
-// on a live circuit...if you must, connect GND first.
 
 void setup() {
   //* This is for Trinket 5V 16MHz, you can remove these three lines if you are not using a Trinket
@@ -161,8 +165,8 @@ void setup() {
 void loop() {
   // Some example procedures showing how to display to the pixels:
   while (modeIndex == 0){
-    colorWipe(color1Select, 25); // color1Select
-	colorWipe(strip.Color(0, 0, 0), 50); // Clear
+    colorWipe(color1Select, 10); // color1Select
+	colorWipe(strip.Color(0, 0, 0), 10); // Clear
   }
   while (modeIndex == 1){
     colorWipe(strip.Color(255,255,255), 25); // Red
@@ -210,17 +214,15 @@ void Mode_ISR() {
 }
 
 //interrupt action for color button
-// ! This is probably excessive, just list colors you like and put into an array
-//   then cycle through them in this ISR
 void Color_ISR() {
   interruptTime = millis();
   if( (interruptTime - lastDBTime) > debounceDelay){
-	lastDBTime = interruptTime;
-	colorIndex++;
-	if (colorIndex >= numColors)){
-	  colorIndex = 0;
-	}
-	color1Select = colorArray[colorIndex];
+	  lastDBTime = interruptTime;
+	  colorIndex++;
+	  if(colorIndex >= numColors){
+	    colorIndex = 0;
+	  }
+	  color1Select = colorArray[colorIndex];
   }
 }
 
