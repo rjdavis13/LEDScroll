@@ -131,7 +131,7 @@ strip.Color(255,255,255)};	//white
 
   // Debounce stuff (note! Debouncer will fail after 50 days continous operation)
   unsigned long lastDBTime = 0;  // the last time the output pin was toggled
-  unsigned long debounceDelay = 1000;    // the debounce time
+  unsigned long debounceDelay = 100;    // the debounce time
   unsigned long interruptTime = 0;  //time interrupt occures
 
   
@@ -169,23 +169,23 @@ void loop() {
 	colorWipe(strip.Color(0, 0, 0), 10); // Clear
   }
   while (modeIndex == 1){
-    colorWipe(strip.Color(255,255,255), 25); // Red
-	colorWipe(strip.Color(0, 0, 0), 25); // Clear
+    colorWipe(strip.Color(255,255,255), 10); // Red
+	colorWipe(strip.Color(0, 0, 0), 10); // Clear
   }
   while (modeIndex == 2){
-    colorWipe(strip.Color(0, 255, 0), 25); // Green
-	colorWipe(strip.Color(0, 0, 0), 25); // Clear
+    colorWipe(strip.Color(0, 255, 0), 10); // Green
+	colorWipe(strip.Color(0, 0, 0), 10); // Clear
   }
   while (modeIndex == 3){
-    colorWipe(strip.Color(0, 0, 255), 25); // Blue
-	colorWipe(strip.Color(0, 0, 0), 25); // Clear
+    colorWipe(strip.Color(0, 0, 255), 10); // Blue
+	colorWipe(strip.Color(0, 0, 0), 10); // Clear
   }
   while (modeIndex == 4){
     rainbowCycle(20);
   }
   while(modeIndex == 5){
-	triColorWipe(strip.Color(255,0,0), strip.Color(255,255,255), strip.Color(0,0,255), 50); // you patriot you
-  colorWipe(strip.Color(0, 0, 0), 16); // Clear
+	triColorWipe(strip.Color(255,0,0), strip.Color(255,255,255), strip.Color(0,0,255), 25); // you patriot you
+  colorWipe(strip.Color(0, 0, 0), 10); // Clear
   }
   
 
